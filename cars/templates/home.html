@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for car in cars %}
+            <div v-for="car in cars" class="col">
+                <div class="card">
+                    <img class="card-img-top" src="{{ car.image.url }}" />
+                    <div class="card-body">
+                        <a href="{% url 'detail' car.id %}">
+                        <h5 class="card-title fw-bold">{{ car.mark }} {{ car.model }}</h5>
+                            </a>
+                        <p class="card-text">{{ car.description }}</p>
+                        {% if car.url %}
+                        <a href="{{ car.url }}"
+                           class="btn btn-primary">
+                            Car Link
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+{% endblock content %}
