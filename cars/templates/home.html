@@ -11,12 +11,7 @@
                         <h5 class="card-title fw-bold">{{ car.mark }} {{ car.model }}</h5>
                             </a>
                         <p class="card-text">{{ car.description }}</p>
-                        {% if car.url %}
-                        <a href="{{ car.url }}"
-                           class="btn btn-primary">
-                            Car Link
-                        </a>
-                        {% endif %}
+                        <p class="card-text"><strong>Price per day: {{ car.price }}</strong></p>
                     </div>
                 </div>
             </div>

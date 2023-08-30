@@ -29,7 +29,7 @@ def detail(request, car_id):
     })
 
 
-@login_required
+@login_required()
 def reserve(request, car_id):
     car = Car.objects.get(pk=car_id)
 
@@ -54,7 +54,34 @@ def reserve(request, car_id):
     })
 
 
-@login_required
+@login_required()
+def update_reservation(request, reservation_id):
+    reservation = get_object_or_404(Reservation, pk=reservation_id)
+
+    if request.method == 'POST':
+        form = ReservationForm(request.POST)
+        if form.is_valid():
+            start_date = form.cleaned_data['start_date']
+            end_date = form.cleaned_data['end_date']
+
+            if Reservation.objects.filter(car=reservation.car, start_date__lte=end_date, end_date__gte=start_date).exclude(pk=reservation_id).exists():
+                messages.error(request, 'The selected dates are not available for reservation!')
+            else:
+                reservation.start_date = start_date
+                reservation.end_date = end_date
+                reservation.save()
+                messages.success(request, 'Reservation updated successfully!')
+                return redirect('detail', car_id=reservation.car.id)
+
+    else:
+        form = ReservationForm()
+    return render(request, 'update_reservation.html', {
+        'reservation': reservation,
+        'form': form
+    })
+
+
+@login_required()
 def delete_reservation(request, reservation_id):
     reservation = get_object_or_404(Reservation, pk=reservation_id, user=request.user)
     reservation.delete()

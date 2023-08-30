@@ -28,8 +28,8 @@
                             {{ reservation.start_date }}-{{ reservation.end_date }}
                         </h6>
                         {% if user.is_authenticated and user == reservation.user %}
-
-                        <a class="btn btn-danger" href="{% url 'deletereservation' reservation.id %}">Delete</a>
+                        <a class="btn btn-primary" href="{% url 'updatereservation' reservation.id %}">Update Reservation</a>
+                        <a class="btn btn-danger" href="{% url 'deletereservation' reservation.id %}">Delete Reservation</a>
                         {% endif %}
                     </li>
                     {% endfor %}
