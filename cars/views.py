@@ -67,7 +67,7 @@ def reserve(request, car_id):
             else:
                 Reservation.objects.create(car=car, start_date=start_date, end_date=end_date, user=request.user)
                 messages.success(request, 'Car reserved successfully!')
-                return redirect('detail', car_id=car_id)
+
 
     else:
         form = ReservationForm()
@@ -99,8 +99,9 @@ def update_reservation(request, reservation_id):
                 reservation.start_date = start_date
                 reservation.end_date = end_date
                 reservation.save()
+
                 messages.success(request, 'Reservation updated successfully!')
-                return redirect('detail', car_id=reservation.car.id)
+
 
     else:
         form = ReservationForm(initial={'start_date': reservation.start_date, 'end_date': reservation.end_date})

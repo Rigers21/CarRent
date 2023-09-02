@@ -2,10 +2,26 @@
 {% block content %}
 <div class="container">
     <h2>Update Reservation</h2>
+    {% if messages %}
+                    <script>
+                        {% for message in messages %}
+                            alert("{{ message }}");
+                        {% endfor %}
+                    </script>
+                {% endif %}
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="btn btn-primary">Update Reservation</button>
     </form>
+    {% if form.errors %}
+                    <script>
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                alert("{{ error }}");
+                            {% endfor %}
+                        {% endfor %}
+                    </script>
+                {% endif %}
 </div>
 {% endblock content %}

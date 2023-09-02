@@ -3,39 +3,39 @@
 <div class="card mb-3">
     <div class="row g-0">
         <div class="col-md-4">
-            <img src="{{ car.image.url }}"
-                 class="img-fluid rounded-start"   alt="">
+            <img src="{{ car.image.url }}" class="img-fluid rounded-start" alt="">
         </div>
         <div class="col-md-8">
             <div class="card-body">
                 <h5 class="card-title">{{ car.mark }}</h5>
                 <p class="card-text">{{ car.description }}</p>
-                <p class="card-text">
-<h5>Reserve Car: {{ car.mark }} {{ car.model }}</h5>
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li>{% if message.tags %} {% endif %} {{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button class="btn btn-primary" type="submit">Reserve</button>
-    </form>
-    {% if form.errors %}
-        <ul class="errorlist">
-            {% for field in form %}
-                {% for error in field.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            {% endfor %}
-        </ul>
-    {% endif %}
+                <h5>Reserve Car: {{ car.mark }} {{ car.model }}</h5>
+
+                {% if messages %}
+                    <script>
+                        {% for message in messages %}
+                            alert("{{ message }}");
+                        {% endfor %}
+                    </script>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="btn btn-primary" type="submit">Reserve</button>
+                </form>
+
+                {% if form.errors %}
+                    <script>
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                alert("{{ error }}");
+                            {% endfor %}
+                        {% endfor %}
+                    </script>
+                {% endif %}
             </div>
         </div>
     </div>
 </div>
-
 {% endblock content %}
