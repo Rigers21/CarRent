@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
+from django.utils.timezone import now
 from django.views.decorators.csrf import csrf_exempt
 from .models import ContactMessage
 from .forms import ContactForm
@@ -29,11 +30,15 @@ def contact(request):
             message = form.cleaned_data['message']
             ContactMessage.objects.create(name=name, email=email, message=message)
             messages.success(request, 'The message was sent successfully!')
-            return redirect('home')
+            return redirect('thankyou')
     else:
         form = ContactForm()
 
     return render(request, 'contact.html', {'form': form})
+
+
+def thankyou(request):
+    return render(request, 'thankyou.html')
 
 
 def detail(request, car_id):
@@ -55,7 +60,9 @@ def reserve(request, car_id):
             start_date = form.cleaned_data['start_date']
             end_date = form.cleaned_data['end_date']
 
-            if Reservation.objects.filter(car=car, start_date__lte=end_date, end_date__gte=start_date).exists():
+            if end_date < start_date:
+                messages.error(request, 'End date must be later than the start date!')
+            elif Reservation.objects.filter(car=car, start_date__lte=end_date, end_date__gte=start_date).exists():
                 messages.error(request, 'The selected dates are not available for reservation!')
             else:
                 Reservation.objects.create(car=car, start_date=start_date, end_date=end_date, user=request.user)
@@ -64,6 +71,9 @@ def reserve(request, car_id):
 
     else:
         form = ReservationForm()
+
+    initial_start_date = now().date()
+    form.fields['start_date'].initial = initial_start_date
     return render(request, 'reservation.html', {
         'car': car,
         'form': form
@@ -80,7 +90,10 @@ def update_reservation(request, reservation_id):
             start_date = form.cleaned_data['start_date']
             end_date = form.cleaned_data['end_date']
 
-            if Reservation.objects.filter(car=reservation.car, start_date__lte=end_date, end_date__gte=start_date).exclude(pk=reservation_id).exists():
+            if end_date < start_date:
+                messages.error(request, 'End date must be later than the start date!')
+            elif Reservation.objects.filter(car=reservation.car, start_date__lte=end_date,
+                                          end_date__gte=start_date).exclude(pk=reservation_id).exists():
                 messages.error(request, 'The selected dates are not available for reservation!')
             else:
                 reservation.start_date = start_date
@@ -90,7 +103,7 @@ def update_reservation(request, reservation_id):
                 return redirect('detail', car_id=reservation.car.id)
 
     else:
-        form = ReservationForm()
+        form = ReservationForm(initial={'start_date': reservation.start_date, 'end_date': reservation.end_date})
     return render(request, 'update_reservation.html', {
         'reservation': reservation,
         'form': form

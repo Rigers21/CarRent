@@ -9,6 +9,7 @@ urlpatterns = [
     path('', carsViews.home, name='home'),
     path('about/', carsViews.about, name='about'),
     path('contact/', carsViews.contact, name='contact'),
+    path('thankyou/', carsViews.thankyou, name='thankyou'),
     path('cars/', include('cars.urls')),
     path('accounts/', include('accounts.urls')),
 ]
