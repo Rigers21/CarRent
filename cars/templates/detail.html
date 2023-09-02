@@ -9,7 +9,11 @@
         <div class="col-md-8">
             <div class="card-body">
                 <h5 class="card-title">{{ car.mark }}</h5>
+                <p class="card-text">{{ car.model }}</p>
+                <p class="card-text">{{ car.fuel }}</p>
+                <p class="card-text">{{ car.year }}</p>
                 <p class="card-text">{{ car.description }}</p>
+
                 <p class="card-text">
 
                     {% if user.is_authenticated %}

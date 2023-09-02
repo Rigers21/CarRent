@@ -1,9 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
-
+from .models import ContactMessage
+from .forms import ContactForm
 from cars.forms import ReservationForm
 from cars.models import Car, Reservation
 
@@ -17,7 +17,23 @@ def home(request):
 
 
 def about(request):
-    return HttpResponse('<h1>Welcome to About page <h1>')
+    return render(request, 'about.html')
+
+
+def contact(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            message = form.cleaned_data['message']
+            ContactMessage.objects.create(name=name, email=email, message=message)
+            messages.success(request, 'The message was sent successfully!')
+            return redirect('home')
+    else:
+        form = ContactForm()
+
+    return render(request, 'contact.html', {'form': form})
 
 
 def detail(request, car_id):

@@ -22,5 +22,7 @@ class Reservation(models.Model):
     end_date = models.DateTimeField()
 
 
-
-
+class ContactMessage(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    message = models.TextField()

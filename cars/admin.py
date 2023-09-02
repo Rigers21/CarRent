@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Car, Reservation
+from .models import Car, Reservation, ContactMessage
 
 
 class ReservationAdmin(admin.ModelAdmin):
@@ -13,6 +13,18 @@ class ReservationAdmin(admin.ModelAdmin):
         return form
 
 
+class ContactMessageAdmin(admin.ModelAdmin):
+    list_display = ('email', 'name', )
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        if obj is None:  # Creating a new reservation
+            form.base_fields['email'].initial = request.email
+            form.base_fields['email'].widget.attrs['readonly'] = True
+        return form
+
+
 admin.site.register(Reservation, ReservationAdmin)
 admin.site.register(Car)
+admin.site.register(ContactMessage, ContactMessageAdmin)
 
