@@ -67,6 +67,7 @@ def reserve(request, car_id):
             else:
                 Reservation.objects.create(car=car, start_date=start_date, end_date=end_date, user=request.user)
                 messages.success(request, 'Car reserved successfully!')
+                return redirect('detail', car_id=car_id)
 
 
     else:
@@ -93,7 +94,7 @@ def update_reservation(request, reservation_id):
             if end_date < start_date:
                 messages.error(request, 'End date must be later than the start date!')
             elif Reservation.objects.filter(car=reservation.car, start_date__lte=end_date,
-                                          end_date__gte=start_date).exclude(pk=reservation_id).exists():
+                                            end_date__gte=start_date).exclude(pk=reservation_id).exists():
                 messages.error(request, 'The selected dates are not available for reservation!')
             else:
                 reservation.start_date = start_date
